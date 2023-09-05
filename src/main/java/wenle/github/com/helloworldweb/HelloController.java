@@ -13,9 +13,13 @@ public class HelloController {
     @Value("${env}")
     private String env;
 
+    @Value("${pipline.time:N/A}")
+    private String pipelineTime;
+
     @GetMapping("/")
     public String index() {
-        return String.format("Hello world! Current env: %s </br> Current host: %s", env, getHostName());
+        return String.format("Hello world! Current env: %s </br> Current host: %s </br> Build version(time): %s", env,
+            getHostName(), pipelineTime);
     }
 
     public String getHostName() {
