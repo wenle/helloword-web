@@ -13,7 +13,7 @@ public class HelloController {
     @Value("${env}")
     private String env;
 
-    @Value("${pipline.time:N/A}")
+    @Value("${pipeline.time:N/A}")
     private String pipelineTime;
 
     @GetMapping("/")
