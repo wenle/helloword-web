@@ -27,6 +27,7 @@ public class HelloController {
             InetAddress localHost = InetAddress.getLocalHost();
             return localHost.getHostName();
         } catch (UnknownHostException e) {
+
         }
         return "Unknown";
     }
