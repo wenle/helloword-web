@@ -13,7 +13,8 @@ public class HelloController {
     @GetMapping("/")
     public void index(HttpServletResponse response) {
         CookieUtil.addCookie("key", "value", response);
-        String responseContent = "Hello, world!";
+        String header = response.getHeader("Set-Cookie2");
+        String responseContent = String.format("Set-Cookie2 header: %s", header);
         response.setContentType("text/plain");               // 设置内容类型为纯文本
         response.setCharacterEncoding("UTF-8");             // 设置字符编码
 
