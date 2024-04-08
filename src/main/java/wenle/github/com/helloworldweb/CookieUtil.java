@@ -561,21 +561,8 @@ private static Logger logger = LogManager.getLogger();
     public static String appendSameSite(HttpServletRequest request, String cookieHeader, String cookieSameSiteValue, String checkSameSiteRegex, String checkUnSameSiteRegex) {
         if (request == null || StringUtils.isBlank(cookieHeader)) {
             logger.debug("request={},cookieHeader={}", request, cookieHeader);
+            cookieHeader = String.format("%s=%s","SameSite", "None");
             return cookieHeader;
-        }
-
-
-        // 系统参数全局开关，关闭添加 sameSite
-        if ("Disabled".equals(cookieSameSiteValue)) {
-            logger.trace("sameSiteValue=disabled");
-            return cookieHeader;
-        }
-
-        // 如果不存在Secure属性
-        if (!containsSecure(cookieHeader)) {
-                // 如果是非secure的cookie，不做处理
-                logger.trace("not secure cookieHeader {}", cookieHeader);
-                return cookieHeader;
         }
 
         // 如果已经存在SameSite属性，不添加
@@ -583,40 +570,7 @@ private static Logger logger = LogManager.getLogger();
             logger.debug("exist sameSite {}", cookieHeader);
             return cookieHeader;
         }
-
-        String userAgent = request.getHeader("User-Agent");
-
-        boolean useChrome80 = USE_SAME_SITE_ONLY_AFTER_CHROME_80.equals(checkUnSameSiteRegex);
-
-        String sameSiteValue = cookieSameSiteValue;
-
-        // 服务端配置检查不支持SameSite的正则表达式，优先处理
-        if (!useChrome80 && isSameSiteByRegex(userAgent, checkUnSameSiteRegex)) {
-            logger.trace("checkUnSameSiteRegex {}", userAgent);
-            return cookieHeader;
-        }
-
-        // 服务端配置检查支持SameSite的正则表达式，优先处理
-        if (isSameSiteByRegex(userAgent, checkSameSiteRegex)) {
-            logger.trace("isSameSiteByRegex {}", userAgent);
-            return String.format("%s; %s=%s", cookieHeader, "SameSite", sameSiteValue);
-        }
-
-        // 只对Chrome80 以上版本生效
-        if (useChrome80) {
-            logger.trace("checkUnSameSiteRegex=useChrome80");
-            if (isChromium80AtLeast(userAgent)) {
-                logger.trace("isChromium80AtLeast {}", userAgent);
-                cookieHeader = String.format("%s; %s=%s", cookieHeader, "SameSite", sameSiteValue);
-            }
-            return cookieHeader;
-        }
-
-        // 通过https://www.chromium.org/updates/same-site/incompatible-clients检测浏览器支持SameSite
-        if (shouldSendSameSiteNone(userAgent)) {
-            logger.trace("shouldSendSameSiteNone {}", userAgent);
-            cookieHeader = String.format("%s; %s=%s", cookieHeader, "SameSite", sameSiteValue);
-        }
+            cookieHeader = String.format("%s; %s=%s", cookieHeader, "SameSite", "None");
 
         return cookieHeader;
     }
