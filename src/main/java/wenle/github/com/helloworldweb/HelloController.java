@@ -3,15 +3,20 @@ package wenle.github.com.helloworldweb;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.Locale;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
+import org.apache.catalina.connector.Response;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloController {
 
-    public String printResponseHeaders(HttpServletResponse response) {
+    public static String printResponseHeaders(HttpServletResponse response) {
         // 获取所有的Header名称
         Collection<String> headerNames = response.getHeaderNames();
 
@@ -43,6 +48,15 @@ public class HelloController {
     @GetMapping("/test")
     public String test() {
         return "Test success!";
+    }
+
+    public static void main(String[] args) {
+        HttpServletResponse response = new HttpServletResponseWrapper(new Response());
+        CookieUtil.addCookie("key", "value", response);
+        response.setContentType("text/plain");               // 设置内容类型为纯文本
+        response.setCharacterEncoding("UTF-8");             // 设置字符编码
+        String responseContent = String.format("headers:\n%s", printResponseHeaders(response));
+        System.out.println(responseContent);
     }
 
 }
