@@ -539,11 +539,7 @@ private static Logger logger = LogManager.getLogger();
                 final StringBuffer buf = new StringBuffer();
                 getCookieHeaderValue(cookie, buf, httpOnly, priority);
                 String cookieValue = buf.toString();
-                try {
-                    cookieValue = appendSameSite(request, cookieValue, cookieSameSiteValue, checkSameSiteRegex, checkUnSameSiteRegex);
-                } catch (Exception e) {
-                    logger.error("appendSameSite error", e);
-                }
+                cookieValue = appendSameSite(request, cookieValue, cookieSameSiteValue, checkSameSiteRegex, checkUnSameSiteRegex);
                 response.addHeader(getCookieHeaderName(cookie), cookieValue);
             } else {
                 response.addCookie(cookie);
