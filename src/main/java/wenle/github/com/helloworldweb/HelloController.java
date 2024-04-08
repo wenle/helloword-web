@@ -1,35 +1,33 @@
 package wenle.github.com.helloworldweb;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.IOException;
+import java.io.PrintWriter;
 
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloController {
 
-    @Value("${env}")
-    private String env;
-
-    @Value("${pipeline.time:N/A}")
-    private String pipelineTime;
-
     @GetMapping("/")
-    public String index() {
-        return String.format("Hello world! Current env: %s </br> Current host: %s </br> Build version(time): %s", env,
-            getHostName(), pipelineTime);
+    public void index(HttpServletResponse response) {
+        CookieUtil.addCookie("key", "value", response);
+        String responseContent = "Hello, world!";
+        response.setContentType("text/plain");               // 设置内容类型为纯文本
+        response.setCharacterEncoding("UTF-8");             // 设置字符编码
+
+        try (PrintWriter writer = response.getWriter()) {
+            writer.write(responseContent);                  // 写入响应内容
+            writer.flush();                                 // 清空缓冲，完成响应内容的发送
+        } catch (IOException e) {
+            // 异常处理逻辑
+        }
     }
 
-    public String getHostName() {
-        try {
-            InetAddress localHost = InetAddress.getLocalHost();
-            return localHost.getHostName();
-        } catch (UnknownHostException e) {
-
-        }
-        return "Unknown";
+    @GetMapping("/test")
+    public String test() {
+        return "Test success!";
     }
 
 }
