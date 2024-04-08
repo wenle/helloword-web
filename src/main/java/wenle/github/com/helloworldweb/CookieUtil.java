@@ -555,12 +555,6 @@ private static Logger logger = LogManager.getLogger();
      * @param cookieHeader 示例：USER_COOKIE=DE719787; Path=/; Secure; HttpOnly
      */
     public static String appendSameSite(HttpServletRequest request, String cookieHeader, String cookieSameSiteValue, String checkSameSiteRegex, String checkUnSameSiteRegex) {
-        if (request == null || StringUtils.isBlank(cookieHeader)) {
-            logger.debug("request={},cookieHeader={}", request, cookieHeader);
-            cookieHeader = String.format("%s=%s","SameSite", "None");
-            return cookieHeader;
-        }
-
         // 如果已经存在SameSite属性，不添加
         if (containsSameSite(cookieHeader)) {
             logger.debug("exist sameSite {}", cookieHeader);
