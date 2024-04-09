@@ -10,7 +10,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletResponseWrapper;
 import org.apache.catalina.connector.Response;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,11 +52,17 @@ public class HelloController {
     @GetMapping("/")
     public ResponseEntity index(HttpServletResponse response) {
         String htmlContent = "<html><head><script type=\"text/javascript\" src=\"./xxx.js\"></head></script><body><h1>Hello, HTML!</h1></body></html>";
-        return ResponseEntity.ok()
-            .header("Set-Cookie", "key=value", "Path=/", "Secure")
-            //.header("Set-Cookie", "key=value", "Path=/", "Secure", "SameSite=None")
+        ResponseCookie cookie = ResponseCookie.from("cookiekey", "cookievalue")
+            .httpOnly(false)           // 设置为HttpOnly
+            .sameSite("None")       // 设置SameSite策略
+            .secure(true)          // 设置Secure标志
+            .path("/")
+            .build();
+        ResponseEntity<String> responseEntity = ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, cookie.toString())
             .contentType(MediaType.TEXT_HTML)
             .body(htmlContent);
+        return responseEntity;
         //CookieUtil.addCookie("key", "value", response);
         //response.setContentType("text/plain");               // 设置内容类型为纯文本
         //response.setCharacterEncoding("UTF-8");             // 设置字符编码
