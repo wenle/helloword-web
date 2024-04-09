@@ -54,7 +54,7 @@ public class HelloController {
         String htmlContent = "<html><head><script type=\"text/javascript\" src=\"./xxx.js\"></head></script><body><h1>Hello, HTML!</h1></body></html>";
         ResponseCookie cookie = ResponseCookie.from("cookiekey", "cookievalue")
             .httpOnly(false)           // 设置为HttpOnly
-            //.sameSite("None")       // 设置SameSite策略
+            .sameSite("Lax")       // 设置SameSite策略
             .secure(true)          // 设置Secure标志
             .path("/")
             .build();
