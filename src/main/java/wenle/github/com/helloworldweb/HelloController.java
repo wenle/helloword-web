@@ -51,7 +51,8 @@ public class HelloController {
     public ResponseEntity index(HttpServletResponse response) {
         String htmlContent = "<html><head><script type=\"text/javascript\" src=\"./xxx.js\"></head></script><body><h1>Hello, HTML!</h1></body></html>";
         return ResponseEntity.ok()
-            .header("Set-Cookie", "key=value", "Path=/", "Secure", "SameSite=None")
+            .header("Set-Cookie", "key=value", "Path=/", "Secure")
+            //.header("Set-Cookie", "key=value", "Path=/", "Secure", "SameSite=None")
             .contentType(MediaType.TEXT_HTML)
             .body(htmlContent);
         //CookieUtil.addCookie("key", "value", response);
